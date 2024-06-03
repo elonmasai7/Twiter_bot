@@ -18,7 +18,6 @@ class XAgent:
             return False
 
     def like_tweet(self, tweet):
-        
         try:
             tweet_id = tweet.find_element(By.XPATH, ".//a[contains(@href, '/status/')]").get_attribute("href").split("/")[-1]
             print(f"Tweet ID: {tweet_id}")
@@ -187,7 +186,6 @@ class XAgent:
         return followers
 
     
-   
     def get_following(self, user):
         self.driver.get(f"https://x.com/{user}")
         time.sleep(2)
@@ -219,58 +217,4 @@ class XAgent:
                 new_following = {f: current_following[f] for f in current_following if f not in following}
                 if not new_following:
                     # Scroll down to the bottom of the page
-                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                    time.sleep(2)
-                    new_height = self.driver.execute_script("return document.body.scrollHeight")
-                    if new_height == last_height:
-                        break
-                    last_height = new_height
-                else:
-                    for key in new_following:
-                        following[key] = new_following[key]
-                    if len(following) >= int(number_of_following.replace(',', '')):
-                        break
-            except StaleElementReferenceException:
-                print("Encountered a stale element, retrying...")
-                time.sleep(1)
-            except Exception as e:
-                print(f"Error during scrolling/loading: {e}")
-                break
-
-        return following
-    
-#   create a method that gets all the handles for a specific search query
-#ex. https://x.com/search?q="@PKU1898"&f=user
-    def get_handles(self, query, num_handles=10):
-        self.driver.get(f'https://x.com/search?q={query}&f=user')
-        time.sleep(2)
-        handles = []
-        last_height = self.driver.execute_script("return document.body.scrollHeight")
-
-        while len(handles) < num_handles:
-            try:
-                WebDriverWait(self.driver, 10).until(
-                    EC.visibility_of_all_elements_located((By.XPATH, "//span[starts-with(text(), '@')]"))
-                )
-                current_handles = [elem.text for elem in self.driver.find_elements(By.XPATH, "//span[starts-with(text(), '@')]")]
-                new_handles = [f for f in current_handles if f not in handles]
-
-                if not new_handles:
-                    # Scroll down to the bottom of the page
-                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                    time.sleep(2)
-                    new_height = self.driver.execute_script("return document.body.scrollHeight")
-                    if new_height == last_height:
-                        break
-                    last_height = new_height
-                else:
-                    handles.extend(new_handles)
-                    print(f"Added {len(new_handles)} new handles.")
-            except StaleElementReferenceException:
-                print("Encountered a stale element, retrying...")
-                time.sleep(1)
-            except Exception as e:
-                print(f"Error during scrolling/loading: {e}")
-                break
-
-        return handles[:num_handles]
+                    self
